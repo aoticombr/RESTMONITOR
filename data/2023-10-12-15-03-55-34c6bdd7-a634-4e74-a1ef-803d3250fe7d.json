@@ -1,0 +1,18 @@
+{
+  "method": "PUT",
+  "url": "/",
+  "headers": {
+    "content-type": "application/json",
+    "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMjMsInNjb3BlIjoieHh4eCIsImlhdCI6MTY5NzEzNzQwNiwiZXhwIjoxNjk3MTM3NzA2fQ.weWvXUFHLDPF2SnRt_di9YlSySzlTMc0HudTXJNfSac",
+    "user-agent": "PostmanRuntime/7.33.0",
+    "accept": "*/*",
+    "postman-token": "a7c36397-7d2e-4a6f-9875-6990067cacf9",
+    "host": "localhost:3003",
+    "accept-encoding": "gzip, deflate, br",
+    "connection": "keep-alive",
+    "content-length": "10"
+  },
+  "body": {
+    "{\r\n    \r\n}": ""
+  }
+}
