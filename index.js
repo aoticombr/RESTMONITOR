@@ -97,22 +97,8 @@ const server = http.createServer((req, res) => {
                 // Token JWT válido, você pode acessar os dados decodificados em 'decoded'
                 console.log('Token JWT válido', decoded);
 
-                // Agora você pode lidar com diferentes métodos HTTP
-                if (req.method === 'POST') {
-                  // Lógica para o método POST
-                  // ...
-                  res.writeHead(200, { 'Content-Type': 'text/plain' });
-                  res.end('Requisição POST tratada');
-                } else if (req.method === 'GET') {
-                  // Lógica para o método GET
-                  // ...
-                  res.writeHead(200, { 'Content-Type': 'text/plain' });
-                  res.end('Requisição GET tratada');
-                } else {
-                  // Outros métodos HTTP
-                  res.writeHead(405, { 'Content-Type': 'text/plain' });
-                  res.end('Método HTTP não permitido');
-                }
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.end(requestDataJSON);
               }
             });
           } else {
