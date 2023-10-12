@@ -116,8 +116,9 @@ const server = http.createServer((req, res) => {
               }
             });
           } else {
-            res.writeHead(401, { 'Content-Type': 'text/plain' });
-            res.end('Token JWT ausente no cabeçalho "Authorization"');
+            // Token JWT ausente no cabeçalho "Authorization", devolva o contexto e o corpo da solicitação
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+             res.end(requestDataJSON);
           }
         }
       }
