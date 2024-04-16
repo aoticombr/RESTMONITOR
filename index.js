@@ -17,8 +17,8 @@ const secretKey = '123456789';
 // ... (seu código anterior)
 
 const server = http.createServer((req, res) => {
-  console.log(req.url);
-  console.log(req.method);
+  console.log('req.url:',req.url);
+  console.log('req.method:',req.method);
 
   const requestData = {
     method: req.method,
@@ -40,13 +40,13 @@ const server = http.createServer((req, res) => {
     const filePath = path.join(dataDir, filename);
     const contentype = req.headers["content-type"] 
     // Parse the URL-encoded data using querystring.parse()
-    
+    console.log('end..1');
     //requestData.body = parsedData;
-    
+    console.log('data:',data);
     if (contentype === "application/json") {
       const parsedBody = JSON.parse(data);
       requestData.body = parsedBody;
-    } if (contentype=== `text/xml; charset="utf-8"`) {
+    } if (contentype === `text/xml; charset="utf-8"`) {
       const parsedData = querystring.parse(data);
       requestData.body = parsedData;
     }
@@ -54,8 +54,9 @@ const server = http.createServer((req, res) => {
       const parsedData = querystring.parse(data);
       requestData.body = parsedData;
     }
-    console.log('req.headers["content-type"]',"#"+contentype+"#")
-    console.log('requestData.body ',requestData.body )
+    console.log('end..2');
+    console.log('req.headers["content-type"]:',"#"+contentype+"#")
+    console.log('requestData.body: ',requestData.body )
     
     let requestDataJSON = '';
     console.log("content-type:",contentype )
@@ -169,7 +170,19 @@ const server = http.createServer((req, res) => {
           }
           console.log('fazendo parse fim' )
     } else {
-      console.log('nenhum' )
+      fs.writeFile(filePath, data, (err) => {
+        if (err) {
+          console.error('Erro ao salvar dados da solicitação no arquivo:', err);
+          res.end('Erro ao salvar dados da solicitação no arquivo.');
+        } else {
+          console.log('dado salvo' )  
+          console.log(`Dados da solicitação salvos em ${filename}`);
+          // Token JWT ausente no cabeçalho "Authorization", devolva o contexto e o corpo da solicitação
+          console.log('enviando resposta' )  
+          res.writeHead(200, { 'Content-Type': req.headers["content-type"] });
+          res.end(data);      
+        }
+      });
       res.writeHead(400, { 'Content-Type': req.headers["content-type"] });
       res.end('Content-type não esperado 2');
     }
