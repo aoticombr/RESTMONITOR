@@ -169,7 +169,9 @@ const server = http.createServer((req, res) => {
                 res.end('Erro: corpo da solicitação vazio.');
           }
           console.log('fazendo parse fim' )
-    } else {
+    } else  if (contentype === undefined) {
+
+    }   else {
       fs.writeFile(filePath, data, (err) => {
         if (err) {
           console.error('Erro ao salvar dados da solicitação no arquivo:', err);
