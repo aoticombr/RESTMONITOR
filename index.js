@@ -4,7 +4,6 @@ const fs = require('fs');
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 const jwt = require('jsonwebtoken');
-const xml2js = require('xml2js');
 
 // Verifique se a pasta "data" existe e a crie, se necessário
 const dataDir = path.join(__dirname, 'data');
@@ -31,32 +30,32 @@ const server = http.createServer((req, res) => {
   req.on('data', chunk => {
     data += chunk.toString();
   });
-
+  let parsedData =  ''
   req.on('end', () => {
     // Salve os dados em um arquivo com base na data e hora atual
     const now = new Date();
     const guid = uuidv4();
-    const filename = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')}-${now.getHours().toString().padStart(2, '0')}-${now.getMinutes().toString().padStart(2, '0')}-${now.getSeconds().toString().padStart(2, '0')}-${guid}.json`;
-    const filePath = path.join(dataDir, filename);
-    const contentype = req.headers["content-type"] 
+    let filename = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')}-${now.getHours().toString().padStart(2, '0')}-${now.getMinutes().toString().padStart(2, '0')}-${now.getSeconds().toString().padStart(2, '0')}-${guid}.json`;
+    let filePath = path.join(dataDir, filename);
+    let contentype = req.headers["content-type"] 
     // Parse the URL-encoded data using querystring.parse()
     console.log('end..1');
     //requestData.body = parsedData;
-    console.log('data:',data);
+    //console.log('data:',data);
     if (contentype === "application/json") {
       const parsedBody = JSON.parse(data);
       requestData.body = parsedBody;
-    } if (contentype === `text/xml; charset="utf-8"`) {
-      const parsedData = querystring.parse(data);
+    } else  if (contentype === `text/xml; charset="utf-8"`) {
+      parsedData = querystring.parse(data);
+      requestData.body = parsedData;
+    } else if (contentype.includes("multipart/form-data")){
+      contentype = "multipart/form-data"
+      parsedData = querystring.parse(data);
+      requestData.body = parsedData;
+    } else {
+       parsedData = querystring.parse(data);
       requestData.body = parsedData;
     }
-    else {
-      const parsedData = querystring.parse(data);
-      requestData.body = parsedData;
-    }
-    console.log('end..2');
-    console.log('req.headers["content-type"]:',"#"+contentype+"#")
-    console.log('requestData.body: ',requestData.body )
     
     let requestDataJSON = '';
     console.log("content-type:",contentype )
@@ -169,8 +168,35 @@ const server = http.createServer((req, res) => {
                 res.end('Erro: corpo da solicitação vazio.');
           }
           console.log('fazendo parse fim' )
-    } else  if (contentype === undefined) {
+    } else if (contentype === "multipart/form-data") {                 
+      console.log('fazendo parse' )   
+      if (data) {   
+        console.log('dado existe' )  
+        console.log('salvando...' )           
+          requestData.body = data
+          requestDataJSON = JSON.stringify(requestData, null, 2);
+          fs.writeFile(filePath, requestDataJSON, (err) => {
+            if (err) {
+              console.error('Erro ao salvar dados da solicitação no arquivo:', err);
+              res.end('Erro ao salvar dados da solicitação no arquivo.');
+            } else {
+              console.log('dado salvo' )  
+              console.log(`Dados da solicitação salvos em ${filename}`);
+              // Token JWT ausente no cabeçalho "Authorization", devolva o contexto e o corpo da solicitação
+              console.log('enviando resposta' )  
+              res.writeHead(200, { 'Content-Type': req.headers["content-type"] });
+              res.end(data);      
+            }
+          });
+      } else {
+            console.error('Erro: corpo da solicitação vazio.');
+            res.writeHead(400, { 'Content-Type': 'text/plain' });
+            res.end('Erro: corpo da solicitação vazio.');
+      }
+      console.log('fazendo parse fim' )
 
+       
+      
     }   else {
       fs.writeFile(filePath, data, (err) => {
         if (err) {
