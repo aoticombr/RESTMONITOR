@@ -1,0 +1,16 @@
+{
+  "method": "GET",
+  "url": "/",
+  "headers": {
+    "host": "100.0.66.81:3003",
+    "user-agent": "Go-http-client/1.1",
+    "content-length": "195",
+    "accept": "*/*",
+    "authorization": "eyJ0eXBlIjoiSldUIiwiYWxnIjoiSFMyNTYiLCJ0eXAiOiJKV1QifQ.eyJhcHBJZCI6IllaOWx0dmJPIiwiYXBwT3JnQ29kZSI6IkJSQTAyIiwiYXBwU2VjcmV0IjoiMWM3YzNiY2ZmZTY5NDVkNWZiY2E0OWM0NWI4Nzg3NjViMTg1YjVlMiIsInR5cGUiOiJvcGVuQXBpIiwiZXhwIjoxNzIxMjM4MTgyfQ.xHwlscnx-DfUpUAd6Vx76QGxi0_9HyiIinIqpK5vSJk",
+    "charset": "UTF8",
+    "content-type": "multipart/form-data; boundary=976a19a5845e07e7fef1f99f72e256e8935c9c5dc68a10938870f0ac824b",
+    "language": "pt-BR",
+    "accept-encoding": "gzip"
+  },
+  "body": "--976a19a5845e07e7fef1f99f72e256e8935c9c5dc68a10938870f0ac824b\r\nContent-Disposition: form-data; name=\"vin\"\r\n\r\nNEWMKP99TC4388216\r\n--976a19a5845e07e7fef1f99f72e256e8935c9c5dc68a10938870f0ac824b--\r\n"
+}

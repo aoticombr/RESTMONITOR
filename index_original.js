@@ -4,9 +4,6 @@ const fs = require('fs');
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 const jwt = require('jsonwebtoken');
-const formidable = require('formidable');
-const zlib = require('zlib');
-const multiparty = require('multiparty');
 
 // Verifique se a pasta "data" existe e a crie, se necessário
 const dataDir = path.join(__dirname, 'data');
@@ -17,10 +14,7 @@ if (!fs.existsSync(dataDir)) {
 const secretKey = '123456789';
 
 
-
-
 const server = http.createServer((req, res) => {
-  const form = new multiparty.Form({ uploadDir: dataDir });
   console.log('req.url:',req.url);
   console.log('req.method:',req.method);
 
@@ -31,15 +25,12 @@ const server = http.createServer((req, res) => {
     body: null
   };
 
-  let data2 = []
   let data = '';
   req.on('data', chunk => {
     data += chunk.toString();
-    data2.push(chunk);
   });
   let parsedData =  '';
   req.on('end', () => {
-    const buffer = Buffer.concat(data2);
     // Salve os dados em um arquivo com base na data e hora atual
     const now = new Date();
     const guid = uuidv4();
@@ -59,89 +50,17 @@ const server = http.createServer((req, res) => {
       contentype = "multipart/form-data"
       parsedData = querystring.parse(data);
       requestData.body = parsedData;
-
-      if (req.method.toLowerCase() === 'post') {
-       
-    
-        form.parse(req, (err, fields, files) => {
-          if (err) {
-            res.writeHead(500, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify({ error: 'Erro ao processar o upload' }));
-            return;
-          }
-    
-          files.file.forEach(file => {
-            const tempPath = file.path;
-            const fileName = file.originalFilename;
-            const newFilePath = path.join(dataDir, fileName);
-    
-            fs.rename(tempPath, newFilePath, err => {
-              if (err) {
-                console.log(`err salvo: ${newFilePath}`);
-              }
-    
-              console.log(`Arquivo salvo: ${newFilePath}`);
-            });
-          });
-        });
-      }
-      
-
-      ///////////////////////------------------
-
       //salvar arquivos em disco vindos de um form-data
-     // Parse dos dados recebidos
-    //  const boundary = `--${req.headers['content-type'].split('=')[1]}`;
-    //  const parts = buffer.toString().split(boundary).slice(1, -1); // Ignora os primeiros e últimos elementos vazios
-    //  parts.forEach(part => {
-    //    const headerEndIndex = part.indexOf('\r\n\r\n');
-    //    if (headerEndIndex !== -1) {
-    //      const header = part.slice(0, headerEndIndex).toString();
-    //      const body = part.slice(headerEndIndex + 4, part.length - 2);
-    //      const body2 = part.slice(headerEndIndex + 4);
-    //      //remove \r\n do final do body
-    //    //  const body2 = body.split('\r\n')[0];
-      
-
-    //      const nameMatch = header.match(/name="([^"]+)"/);
-    //      const fileNameMatch = header.match(/filename="([^"]+)"/);
-    //      const contentTypeMatch = header.match(/Content-Type: ([^;\r\n]+)/);
-
-    //      if (fileNameMatch) {
-    //        const fieldName = nameMatch ? nameMatch[1] : 'file';
-    //        const fileName = fileNameMatch[1];
-    //        const contentType = contentTypeMatch ? contentTypeMatch[1] : 'application/gzip';
-
-
-
-    //        const filePath = path.join(dataDir, fileName);
-    //        const filePath2 = path.join(dataDir, 'v2'+fileName);
-    //        const filePath3 = path.join(dataDir, 'v3'+fileName);
-
-    //        //fs.writeFileSync(filePath, body);
-    //        fs.writeFileSync(filePath3, body2, 'binary');
-
-    //        if (contentTypeMatch && contentTypeMatch[1] === 'application/gzip') {
-    //           zlib.gunzip(body2, (err, decompressed) => {
-    //           if (err) {
-    //             console.error('Erro ao descomprimir arquivo gzip:', err);             
-    //           }
-    //           // Salva o arquivo descomprimido
-    //           fs.writeFileSync(filePath2, decompressed);
-
-    //           console.log(`Arquivo salvo: ${filePath2}`);
-    //         });
-    //       }
-          
-
-
-           
-
-    //        console.log(`Arquivo salvo: ${filePath}`);
-    //      }
-    //    }
-    //  });
-      
+      const boundary = req.headers['content-type'].split('=')[1];
+      const parts = data.split(boundary);
+      parts.forEach(part => {
+        if (part.includes('filename')) {
+          const fileName = part.split('filename="')[1].split('"')[0];
+          const fileData = part.split('filename="')[1].split('\r\n\r\n')[1].split('\r\n')[0];
+          fs.writeFileSync(path.join(dataDir, fileName), fileData);
+        }
+      });
+   
  
       
     } else {

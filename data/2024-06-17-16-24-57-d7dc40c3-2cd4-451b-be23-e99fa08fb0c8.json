@@ -1,0 +1,16 @@
+{
+  "method": "GET",
+  "url": "/",
+  "headers": {
+    "host": "100.0.66.81:3003",
+    "user-agent": "Go-http-client/1.1",
+    "content-length": "68",
+    "accept": "*/*",
+    "authorization": "eyJ0eXBlIjoiSldUIiwiYWxnIjoiSFMyNTYiLCJ0eXAiOiJKV1QifQ.eyJhcHBJZCI6IllaOWx0dmJPIiwiYXBwT3JnQ29kZSI6IkJSQTAyIiwiYXBwU2VjcmV0IjoiMWM3YzNiY2ZmZTY5NDVkNWZiY2E0OWM0NWI4Nzg3NjViMTg1YjVlMiIsInR5cGUiOiJvcGVuQXBpIiwiZXhwIjoxNzIxMjM4MTgyfQ.xHwlscnx-DfUpUAd6Vx76QGxi0_9HyiIinIqpK5vSJk",
+    "charset": "UTF8",
+    "content-type": "multipart/form-data; boundary=0b4a98a6e1c70e4dfbf19b990b353794699dac48d44c2837110c969c8eb1",
+    "language": "pt-BR",
+    "accept-encoding": "gzip"
+  },
+  "body": "\r\n--0b4a98a6e1c70e4dfbf19b990b353794699dac48d44c2837110c969c8eb1--\r\n"
+}
